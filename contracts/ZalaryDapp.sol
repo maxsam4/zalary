@@ -99,7 +99,7 @@ contract ZalaryDapp is IAZTEC {
     uint256 _settlementCurrencyId,
     bytes calldata _proofData
   ) external {
-    address salaryId = _createSalary(_notionalHash, _settlementCurrencyId, _totalSalary, _totalDuration, _proofData);
+    address salaryId = _createSalary(_notionalHash, _totalSalary, _totalDuration, _settlementCurrencyId, _proofData);
 
     emit salaryCreated(salaryId, msg.sender, _employerPublicKey, _totalSalary, _totalDuration, block.timestamp);
 

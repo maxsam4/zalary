@@ -47,7 +47,7 @@ library Utilities {
       za := mload(add(_proofData, 0x40))
       zb := mload(add(_proofData, 0x60))
     }
-    return za.mul(scalingFactor).mul(zb);
+    return za.mul(scalingFactor).div(zb);
   }
 
   function onlyZalaryDapp(address sender, address zalaryFactory) external pure {

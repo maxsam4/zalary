@@ -88,22 +88,6 @@ contract Zalary is ZkAssetMintable {
 
   }
 
-  function adjustSalaryBalance(bytes memory _proofData) public {
-    Utilities.onlyEmployer(msg.sender, employer);
-
-    bytes32 newcurrentSalaryBalance = Utilities._processAdjustSalary(_proofData, salaryVariables);
-    salaryVariables.currentSalaryBalance = newcurrentSalaryBalance;
-  }
-
-  function marksalaryAsDefault(bytes memory _proof1, bytes memory _proof2, uint256 _salaryDurationToWithdraw) public {
-    require(
-      _salaryDurationToWithdraw.add(salaryVariables.lastSalaryPaymentDate) < block.timestamp,
-      "withdraw is greater than accrued salary"
-    );
-    Utilities._validateDefaultProofs(_proof1, _proof2, _salaryDurationToWithdraw, salaryVariables);
-    emit Default();
-  }
-
   function settle(bytes calldata _proofData, bytes32 _currentSalaryBalance, address _employee) external {
     Utilities.onlyZalaryDapp(msg.sender, salaryVariables.zalaryFactory);
 
