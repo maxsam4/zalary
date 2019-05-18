@@ -35,7 +35,8 @@ contract Zalary is ZkAssetMintable {
 
   constructor(
     bytes32 _notionalHash,
-    uint256 _salaryPerSecond,
+    uint256 _totalSalary,
+    uint256 _totalDuration,
     address _employer,
     address _aceAddress,
     address _settlementCurrency
@@ -43,7 +44,8 @@ contract Zalary is ZkAssetMintable {
       salaryVariables.zalaryFactory = msg.sender;
       salaryVariables.notionalHash = _notionalHash;
       salaryVariables.id = address(this);
-      salaryVariables.salaryPerSecond = _salaryPerSecond;
+      salaryVariables.totalSalary = _totalSalary;
+      salaryVariables.totalDuration = _totalDuration;
       salaryVariables.employer = _employer;
       employer = _employer;
       salaryVariables.settlementToken = IZkAsset(_settlementCurrency);
@@ -51,8 +53,7 @@ contract Zalary is ZkAssetMintable {
   }
 
   function fire(
-    bytes calldata _proofData,
-    bytes32 _currentSalaryBalance
+    bytes calldata _proofData
   ) external {
     Utilities.onlySalaryDapp(msg.sender, salaryVariables.zalaryFactory);
     delete salaryVariables;

@@ -25,7 +25,8 @@ library Utilities {
 
   struct SalaryVariables {
     bytes32 notionalHash;
-    uint256 salaryPerSecond;
+    uint256 totalSalary;
+    uint256 totalDuration;
     uint256 lastSalaryPaymentDate;
     bytes32 currentSalaryBalance;
     address employee;
@@ -43,10 +44,12 @@ library Utilities {
 
   function getRatio(bytes memory _proofData) internal pure returns (uint256 ratio) {
     uint256 za;
+    uint256 zb;
     assembly {
       za := mload(add(_proofData, 0x40))
+      zb := mload(add(_proofData, 0x60))
     }
-    return za.mul(scalingFactor);
+    return za.mul(scalingFactor).mul(zb);
   }
 
 
@@ -68,7 +71,7 @@ library Utilities {
 
     (,bytes memory _proof1OutputNotes) = _validateSalaryProof(_proof1, _salaryDuration, _salaryVariables);
     (bytes memory _proof2Outputs) = ACE(_salaryVariables.aceAddress).validateProof(PRIVATE_RANGE_PROOF, address(this),_proof2);
-    (bytes memory _proof2InputNotes, bytes memory _proof2OutputNotes, ,) = _proof2Outputs.get(0).extractProofOutput();
+    (bytes memory _proof2InputNotes, , ,) = _proof2Outputs.get(0).extractProofOutput();
 
     require(_noteCoderToStruct(_proof2InputNotes.get(0)).noteHash == _noteCoderToStruct(_proof1OutputNotes.get(0)).noteHash, 'withdraw note in 2 is not the same as 1');
 
@@ -89,8 +92,9 @@ library Utilities {
 
     //NotionalNote * a = WithdrawableSalaryNote * b
 
-    require(getRatio(_proof1) ==
-            _salaryVariables.salaryPerSecond.mul(scalingFactor)
+    require(getRatio(_proof1).div(10000) ==
+            _salaryVariables.totalDuration.mul(scalingFactor)
+              .div(_salaryDuration)
            , 'ratios do not match');
 
 

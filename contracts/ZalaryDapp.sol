@@ -22,7 +22,8 @@ contract ZalaryDapp is IAZTEC {
     address id,
     address employer,
     string employerPublicKey,
-    uint256 salaryPerSecond,
+    uint256 totalSalary,
+    uint256 totalDuration,
     uint256 createdAt
   );
 
@@ -94,7 +95,8 @@ contract ZalaryDapp is IAZTEC {
 
   function _createSalary(
     bytes32 _notionalHash,
-    uint256 _salaryPerSecond,
+    uint256 _totalSalary,
+    uint256 _totalDuration,
     uint256 _settlementCurrencyId,
     bytes memory _proofData
   ) private returns (address) {
@@ -102,7 +104,8 @@ contract ZalaryDapp is IAZTEC {
 
     Zalary newSalary = new Zalary(
       _notionalHash,
-      _salaryPerSecond,
+      _totalSalary,
+      _totalDuration,
       msg.sender,
       aceAddress,
       salaryCurrency
@@ -124,7 +127,8 @@ contract ZalaryDapp is IAZTEC {
 
   function createSalary(
     bytes32 _notionalHash,
-    uint256 _salaryPerSecond,
+    uint256 _totalSalary,
+    uint256 _totalDuration,
     uint256 _settlementCurrencyId,
     string calldata _viewingKey,
     string calldata _employerPublicKey,
@@ -133,7 +137,8 @@ contract ZalaryDapp is IAZTEC {
     address salaryId = _createSalary(
       _notionalHash,
       _settlementCurrencyId,
-      _salaryPerSecond,
+      _totalSalary,
+      _totalDuration,
       _proofData
     );
 
@@ -141,7 +146,8 @@ contract ZalaryDapp is IAZTEC {
       salaryId,
       msg.sender,
       _employerPublicKey,
-      _salaryPerSecond,
+      _totalSalary,
+      _totalDuration,
       block.timestamp
     );
 
